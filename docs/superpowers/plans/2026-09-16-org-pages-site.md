@@ -488,7 +488,7 @@ git commit -m "feat: add page shell and base stylesheet"
       <p class="cta-note" id="version-line">Windows, macOS and Linux · AGPL-3.0</p>
 
       <figure class="shot shot-hero">
-        <img src="assets/hero.png" alt="The Cord editor, showing a note with backlinks in the sidebar." loading="eager" width="1600" height="1000">
+        <img src="assets/hero.png" alt="The Cord editor: a note with tags, inline LaTeX and a backlinks bar along the bottom." loading="eager" width="2560" height="1392">
       </figure>
     </div>
   </section>
@@ -546,7 +546,7 @@ screenshots arrive.
 .shot {
   position: relative;
   margin-top: 56px;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 2560 / 1392;
   background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -766,16 +766,20 @@ The frame styles already exist from Task 4. This task only adds markup.
       the mono dark default.</p>
 
       <figure class="shot">
-        <img src="assets/notepad.png" alt="A Cord notepad: a page of addressable blocks, one with a transcluded block from another note." loading="lazy" width="1600" height="1000">
-        <figcaption>Notepads — a page of blocks you can address and transclude.</figcaption>
+        <img src="assets/transclusion.png" alt="A Cord note quoting a block transcluded from another note, shown inset with a link back to its source." loading="lazy" width="2560" height="1392">
+        <figcaption>Transclusion — a block from another note, by reference. It cannot go stale.</figcaption>
       </figure>
 
       <figure class="shot">
-        <img src="assets/graph.png" alt="The Cord graph view, showing notes as nodes connected by their links." loading="lazy" width="1600" height="1000">
-        <figcaption>The graph — every note and every link between them.</figcaption>
+        <img src="assets/blocks.png" alt="A Cord note with tags attached to individual blocks in the right-hand gutter, beside a syntax-highlighted code block." loading="lazy" width="2560" height="1392">
+        <figcaption>Blocks — tag and link a single block, not just the whole note.</figcaption>
       </figure>
-    </div>
-  </section>
+
+      <figure class="shot">
+        <img src="assets/palette.png" alt="The Cord command palette open over a note, listing navigation and settings commands with their shortcuts." loading="lazy" width="2560" height="1392">
+        <figcaption>Everything from the keyboard.</figcaption>
+      </figure>
+    </section>
 ```
 
 - [ ] **Step 2: Append the caption style to `css/site.css`**
@@ -1346,11 +1350,10 @@ Expected: `1`
 Run: `grep -o 'src="[^"]*"' index.html`
 
 Expected references: `css/tokens.css`, `css/site.css`, `js/releases.js`,
-`js/theme.js`, `assets/favicon.svg`, `assets/hero.png`, `assets/notepad.png`,
-`assets/graph.png`.
+`js/theme.js`, `assets/favicon.svg`, `assets/hero.png`, `assets/transclusion.png`,
+`assets/blocks.png`, `assets/palette.png`.
 
-The three PNGs are expected to be missing at this point — the developer supplies
-them separately. Every other file must exist. Check with:
+All four PNGs are present (supplied 2026-09-16). Every file must exist. Check with:
 
 ```bash
 for f in css/tokens.css css/site.css js/releases.js js/theme.js assets/favicon.svg; do
@@ -1452,17 +1455,19 @@ the version line shows the current tag.
 
 ---
 
-## Remaining developer input
+## Screenshots — supplied
 
-The three screenshots are not part of any task because they are supplied rather
-than built. Drop them in when ready:
+All four landed on 2026-09-16 at 2560x1392 (ratio 1.84), already copied into
+`assets/`. The frames use `aspect-ratio: 2560 / 1392` to match, so nothing is
+cropped.
 
-| File | What it should show | Aspect |
-|---|---|---|
-| `assets/hero.png` | The editor with a note open and backlinks visible | 16:10 |
-| `assets/notepad.png` | A notepad page with a transcluded block | 16:10 |
-| `assets/graph.png` | The graph view | 16:10 |
+| File | What it shows |
+|---|---|
+| `assets/hero.png` | The editor: a note with tags, inline LaTeX, and the backlinks bar |
+| `assets/transclusion.png` | A note quoting a block transcluded from another note |
+| `assets/blocks.png` | Per-block tags in the gutter, beside a code block |
+| `assets/palette.png` | The command palette open over a note |
 
-Any aspect ratio works — the frames crop from the top left — but 16:10 avoids
-cropping. No CSS or HTML change is needed; the `<img>` tags already point at
-these paths.
+No graph-view screenshot was supplied, so the site does not show one and makes
+no claim that it does. If one arrives later, it earns a fourth frame in the
+screenshot strip; nothing else has to change.
