@@ -189,3 +189,43 @@ figcaption {
 .notice ul { margin: 12px 0 0 20px; }
 .notice li { margin-bottom: 8px; }
 .notice strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Footer and theme picker ──────────────────────────────────────────── */
+
+footer { border-top: 1px solid var(--border); padding: 32px 0; }
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.theme-picker { display: flex; align-items: center; gap: 12px; }
+#theme-buttons { display: flex; gap: 8px; }
+
+#theme-buttons button {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+#theme-buttons button:hover { transform: scale(1.15); }
+#theme-buttons button[aria-pressed="true"] {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+#theme-buttons button[data-theme="blue"]      { background: #4a8ff5; }
+#theme-buttons button[data-theme="olive"]     { background: #c9a84c; }
+#theme-buttons button[data-theme="teal"]      { background: #e07a54; }
+#theme-buttons button[data-theme="midnight"]  { background: #f7768e; }
+#theme-buttons button[data-theme="rosewood"]  { background: #d4856b; }
+#theme-buttons button[data-theme="parchment"] { background: #d4a572; }
