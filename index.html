@@ -108,11 +108,61 @@
       </figure>
     </div>
   </section>
-  <!-- Task 8: install -->
+  <section id="install">
+    <div class="wrap">
+      <p class="eyebrow">Install</p>
+      <h2>Download.</h2>
+      <p class="lede">Cord is in beta because the installers are young, not
+      because the app is half-built. Every platform is built and signed by CI,
+      but only Windows has had much real use.</p>
+
+      <ul class="grid downloads">
+        <li class="panel card">
+          <h3>Windows</h3>
+          <p><code>Cord_&lt;version&gt;_x64-setup.exe</code></p>
+          <a class="btn btn-primary" data-platform="windows"
+             href="https://github.com/cord-note/cord/releases/latest">Download</a>
+        </li>
+        <li class="panel card">
+          <h3>macOS (Apple Silicon)</h3>
+          <p><code>Cord_&lt;version&gt;_aarch64.dmg</code></p>
+          <a class="btn btn-primary" data-platform="macos"
+             href="https://github.com/cord-note/cord/releases/latest">Download</a>
+        </li>
+        <li class="panel card">
+          <h3>Linux (Debian/Ubuntu)</h3>
+          <p><code>Cord_&lt;version&gt;_amd64.deb</code></p>
+          <a class="btn btn-primary" data-platform="deb"
+             href="https://github.com/cord-note/cord/releases/latest">Download</a>
+        </li>
+        <li class="panel card">
+          <h3>Linux (anything else)</h3>
+          <p><code>Cord_&lt;version&gt;_amd64.AppImage</code></p>
+          <a class="btn btn-primary" data-platform="appimage"
+             href="https://github.com/cord-note/cord/releases/latest">Download</a>
+        </li>
+      </ul>
+
+      <div class="panel notice">
+        <h3>It is not code-signed yet</h3>
+        <p>Windows and macOS will both object the first time. Nothing is wrong;
+        there is simply no certificate behind the binary.</p>
+        <ul>
+          <li><strong>Windows</strong> — SmartScreen calls it an unrecognised
+          app. <em>More info</em> → <em>Run anyway</em>.</li>
+          <li><strong>macOS</strong> — Gatekeeper refuses to open it. Right-click
+          the app, choose <em>Open</em>, then confirm. Double-clicking will not
+          offer that option.</li>
+          <li><strong>Linux</strong> — no warning. Mark the AppImage executable
+          with <code>chmod +x</code> before running it.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
   <!-- Task 9: open source -->
 </main>
 <!-- Task 10: footer -->
-<script src="js/releases.js" defer></script>
+<script src="js/releases.js" type="module"></script>
 <script src="js/theme.js" defer></script>
 </body>
 </html>
