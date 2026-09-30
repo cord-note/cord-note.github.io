@@ -1,70 +1,41 @@
-/* Accent-theme picker. Sets data-theme on <html>, which is the same mechanism
-   the Cord app uses, so the tokens in tokens.css do all the work.
-   Light and dark follow the system; this picker does not change that. */
+/* Paper / Charcoal toggle. The saved choice is applied before first paint by
+   the inline script in each page's <head>; this file only wires the button.
+   Storage can be unavailable (private windows, blocked site data), so every
+   access is guarded and the page works without it. */
 
-const THEMES = [
-  { id: 'mono',      label: 'Mono' },
-  { id: 'blue',      label: 'Blue' },
-  { id: 'olive',     label: 'Olive' },
-  { id: 'teal',      label: 'Teal' },
-  { id: 'midnight',  label: 'Midnight' },
-  { id: 'rosewood',  label: 'Rosewood' },
-  { id: 'parchment', label: 'Parchment' },
-];
+const KEY = 'cord-site-theme';
+const NAMES = { light: 'Paper', dark: 'Charcoal' };
+const root = document.documentElement;
+const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-const STORAGE_KEY = 'cord-site-theme';
-
-function readStored() {
-  try {
-    const value = localStorage.getItem(STORAGE_KEY);
-    return THEMES.some((t) => t.id === value) ? value : 'mono';
-  } catch {
-    return 'mono';
-  }
+function current() {
+  const explicit = root.dataset.theme;
+  if (explicit === 'light' || explicit === 'dark') return explicit;
+  return systemDark.matches ? 'dark' : 'light';
 }
 
-function store(id) {
-  try {
-    localStorage.setItem(STORAGE_KEY, id);
-  } catch {
-    /* Private windows and blocked site data both throw here. The theme still
-       applies for this page view; it just is not remembered. */
-  }
+function render(button) {
+  const theme = current();
+  const other = theme === 'dark' ? 'light' : 'dark';
+  button.querySelector('.toggle-text').textContent = NAMES[theme];
+  button.setAttribute('aria-label', `Theme: ${NAMES[theme]}. Switch to ${NAMES[other]}.`);
 }
 
-function apply(id) {
-  /* Mono is the :root default, so it is expressed as the absence of the
-     attribute rather than as data-theme="mono". */
-  if (id === 'mono') {
-    document.documentElement.removeAttribute('data-theme');
-  } else {
-    document.documentElement.setAttribute('data-theme', id);
-  }
-  for (const button of document.querySelectorAll('#theme-buttons button')) {
-    button.setAttribute('aria-pressed', String(button.dataset.theme === id));
-  }
+const button = document.getElementById('theme-toggle');
+if (button) {
+  button.hidden = false;
+  render(button);
+
+  button.addEventListener('click', () => {
+    const next = current() === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem(KEY, next);
+    } catch {
+      /* Not saved; the choice lasts for this page view. */
+    }
+    render(button);
+  });
+
+  systemDark.addEventListener('change', () => render(button));
 }
-
-function init() {
-  const host = document.getElementById('theme-buttons');
-  const picker = document.querySelector('.theme-picker');
-  if (!host || !picker) return;
-
-  for (const theme of THEMES) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.dataset.theme = theme.id;
-    button.title = theme.label;
-    button.setAttribute('aria-label', theme.label);
-    button.addEventListener('click', () => {
-      apply(theme.id);
-      store(theme.id);
-    });
-    host.appendChild(button);
-  }
-
-  picker.hidden = false;
-  apply(readStored());
-}
-
-init();
