@@ -103,6 +103,8 @@ em { font-style: italic; }
 code, pre, kbd {
   font-family: var(--font-mono);
   font-size: 0.86em;
+  /* Show what to type: no => arrows turning into ⇒. */
+  font-variant-ligatures: none;
 }
 
 :not(pre) > code {
@@ -235,6 +237,9 @@ code, pre, kbd {
 
 .grid {
   display: grid;
+  /* minmax(0, …) so a wide code block scrolls inside itself rather than
+     widening the column past the screen. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px 48px;
 }
 

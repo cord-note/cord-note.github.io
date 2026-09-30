@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shuttle — an editor for linked notes</title>
+<meta name="description" content="Shuttle is a React rich-text editor for note-taking apps, built on official Tiptap 3: wiki links, addressable blocks, transclusion and markdown that disappears as you type.">
+<meta property="og:title" content="Shuttle">
+<meta property="og:description" content="A React editor for notes that link, built on Tiptap 3.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cord-note.github.io/shuttle/">
+<meta name="color-scheme" content="light dark">
+<script>
+  /* Applies a saved theme before first paint, and arms the motif animation. */
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+    try {
+      var theme = localStorage.getItem('cord-site-theme');
+      if (theme === 'light' || theme === 'dark') root.dataset.theme = theme;
+    } catch (e) {}
+  })();
+</script>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Instrument+Sans:wght@400..600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="Cord home">
+      <svg viewBox="0 0 1025 1024" aria-hidden="true"><path fill="currentColor" d="M1004.66,473.73l-208.64-365.83c-14.47-25.37-41.38-41.1-70.58-41.25l-421.14-2.23c-29.21-.15-56.28,15.28-71.02,40.5L20.78,468.52c-14.74,25.22-14.9,56.38-.43,81.75l208.64,365.83c14.47,25.37,41.38,41.1,70.58,41.25l421.14,2.23c29.21.15,56.28-15.28,71.02-40.5l212.5-363.61c14.74-25.22,14.9-56.38.43-81.75ZM911.12,527.75l-132.05,225.95c-13.6,23.27-47.27,23.17-60.73-.18l-161.37-279.87c-6.21-10.76-17.64-17.45-30.07-17.57l-323.04-3.23c-26.95-.27-43.57-29.55-29.96-52.83l132.05-225.95c6.33-10.83,17.96-17.46,30.5-17.4l364.14,1.93c12.54.07,24.1,6.82,30.31,17.72l180.4,316.32c6.21,10.9,6.14,24.28-.19,35.11Z"/></svg>
+      Cord
+    </a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="../">Cord</a>
+      <a href="./" aria-current="page">Shuttle</a>
+      <a class="nav-optional" href="https://github.com/cord-note">GitHub</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" hidden>
+        <span class="swatch" aria-hidden="true"></span><span class="toggle-text">Paper</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <p class="label">Shuttle · <code>shuttle-editor</code> on npm</p>
+          <h1>An editor for notes that <em>link</em>.</h1>
+          <p class="lede">
+            Shuttle is a React rich-text editor for note-taking apps, built on
+            official Tiptap 3. Markdown syntax disappears as you type, documents
+            are stored as Tiptap JSON, and your app plugs in its own data through
+            one adapter object.
+          </p>
+          <div class="cta">
+            <a class="btn btn-primary" href="#install">Install</a>
+            <a class="btn" href="https://github.com/cord-note/shuttle">View source</a>
+            <a class="btn" href="https://www.npmjs.com/package/shuttle-editor">npm</a>
+          </div>
+          <p class="meta">React 18 or 19 · ESM only · AGPL-3.0-or-later</p>
+        </div>
+
+        <svg class="motif" viewBox="0 0 280 260" aria-hidden="true">
+          <g class="hand">
+            <path class="link" pathLength="1" d="M20 30 Q 90 26 160 31"/>
+            <path class="link" pathLength="1" d="M20 62 Q 110 58 200 63"/>
+            <path class="link" pathLength="1" d="M20 94 Q 70 91 120 95"/>
+            <path class="link" pathLength="1" d="M20 150 Q 100 146 180 151"/>
+            <path class="link" pathLength="1" d="M20 182 Q 90 179 150 183"/>
+            <path class="link" pathLength="1" d="M124 95 Q 200 110 238 196"/>
+            <circle class="node hot" cx="124" cy="95" r="5"/>
+            <circle class="node" cx="240" cy="204" r="7"/>
+            <text x="126" y="80">[[Ideas]]</text>
+            <text x="190" y="234">another note</text>
+            <text x="20" y="130"># heading</text>
+          </g>
+          <g class="precise">
+            <line class="tick" x1="10" y1="10" x2="10" y2="200"/>
+            <path class="link" pathLength="1" d="M20 30 H160"/>
+            <path class="link" pathLength="1" d="M20 62 H200"/>
+            <path class="link" pathLength="1" d="M20 94 H120"/>
+            <path class="link" pathLength="1" d="M20 150 H180"/>
+            <path class="link" pathLength="1" d="M20 182 H150"/>
+            <path class="link" pathLength="1" d="M124 94 H236 V198"/>
+            <rect class="node hot" x="120" y="90" width="8" height="8"/>
+            <rect class="node" x="229" y="198" width="14" height="14"/>
+            <text x="130" y="84">MENTION</text>
+            <text x="172" y="232">NOTE · ID ideas</text>
+            <text x="20" y="130">H1</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="wrap grid">
+      <p class="label">What it does</p>
+      <div class="body">
+        <h2>Built for notes, not documents.</h2>
+        <ul class="rows">
+          <li>
+            <h3>Markdown that vanishes</h3>
+            <p>Type <code>#&nbsp;</code> for a heading or <code>**bold**</code>
+            for bold, and the syntax turns into formatting as you write. Paste
+            markdown in, copy markdown out.</p>
+          </li>
+          <li>
+            <h3>Wiki links</h3>
+            <p>Type <code>[[</code> to link another note, or write
+            <code>[[Note]]</code> and <code>[[Note|alias]]</code> directly.
+            Unlinked mentions of note titles are highlighted.</p>
+          </li>
+          <li>
+            <h3>Notepad mode</h3>
+            <p>Every top-level block gets a stable id, a drag handle and a
+            block menu: move, duplicate, turn into, delete.</p>
+          </li>
+          <li>
+            <h3>Block transclusion</h3>
+            <p>Embed a block from another note by reference. It always shows
+            the source's current content.</p>
+          </li>
+          <li>
+            <h3>Maths</h3>
+            <p>Inline and display formulas, rendered with KaTeX.</p>
+          </li>
+          <li>
+            <h3>Structure</h3>
+            <p>Tables, toggles, task lists, highlight, subscript and
+            superscript, and code blocks with syntax highlighting.</p>
+          </li>
+          <li>
+            <h3>Find, outline, media</h3>
+            <p>Find and replace, a heading outline panel, image uploads by
+            paste, drop or slash menu, and YouTube and Twitch embeds from a
+            pasted link.</p>
+          </li>
+          <li>
+            <h3>Keyboard first</h3>
+            <p>A <code>/</code> slash menu, a selection toolbar, and every
+            shortcut rebindable.</p>
+          </li>
+        </ul>
+      </div>
+      <aside class="margin">
+        <p class="note">Both modes share one schema, so a document can switch between note and notepad without being converted.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="install">
+    <div class="wrap grid">
+      <p class="label">Install</p>
+      <div class="body">
+        <h2>One package.</h2>
+        <pre><code><span class="k">npm</span> install shuttle-editor react react-dom katex
+<span class="c"># or</span>
+<span class="k">pnpm</span> add shuttle-editor react react-dom katex
+<span class="c"># or</span>
+<span class="k">yarn</span> add shuttle-editor react react-dom katex</code></pre>
+        <p>React 18 or 19 and KaTeX 0.16 are peer dependencies. The package is
+        ESM only.</p>
+
+        <div class="callout">
+          <h3>From GitHub Packages instead</h3>
+          <p>The same package is published as <code>@cord-note/shuttle</code>.
+          Point the scope at GitHub in your <code>.npmrc</code> and
+          authenticate with a token that has <code>read:packages</code>;
+          GitHub asks for one even for public packages.</p>
+          <pre><code>@cord-note:registry=https://npm.pkg.github.com</code></pre>
+          <p>Then import from <code>@cord-note/shuttle</code>, including the
+          stylesheet.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="start">
+    <div class="wrap grid">
+      <p class="label">Quick start</p>
+      <div class="body">
+        <h2>A working editor, straight away.</h2>
+        <p class="lede">
+          <code>createFakeHost()</code> is an in-memory host with three sample
+          notes that records every call. Start with it, then write your own.
+        </p>
+        <pre><code><span class="k">import</span> { useState } <span class="k">from</span> 'react';
+<span class="k">import</span> { ShuttleEditor, createFakeHost, type JSONContent } <span class="k">from</span> 'shuttle-editor';
+<span class="k">import</span> 'shuttle-editor/styles.css';
+
+<span class="k">const</span> host = createFakeHost();
+
+<span class="k">export function</span> Demo() {
+  <span class="k">const</span> [doc, setDoc] = useState&lt;JSONContent | null&gt;(null);
+  <span class="k">return</span> (
+    &lt;ShuttleEditor docKey="demo" doc={doc} mode="notepad" host={host}
+      onChange={(_key, next) =&gt; setDoc(next)} /&gt;
+  );
+}</code></pre>
+      </div>
+      <aside class="margin">
+        <p class="note"><code>doc</code> is read only when <code>docKey</code> changes. After that the editor owns the content and reports it through <code>onChange</code>, debounced.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="host">
+    <div class="wrap grid">
+      <p class="label">The adapter</p>
+      <div class="body">
+        <h2>Your app, one object.</h2>
+        <p class="lede">
+          Shuttle knows nothing about where notes live. Everything it needs
+          from your app comes through <code>ShuttleHost</code>: how to search
+          notes, where files go, what to do when a link is clicked.
+        </p>
+        <pre><code><span class="k">const</span> host: ShuttleHost = {
+  <span class="c">// Lookups</span>
+  searchNotes, findNoteByTitle, listNoteTitles,
+  listBlocks, resolveBlock, resolveFileSrc,
+
+  <span class="c">// Side effects</span>
+  uploadFile, openNote, onLinksChanged,
+  onFragmentLinksRemoved, onFragmentAction, log,
+
+  <span class="c">// Settings</span>
+  keybindings: {},
+};</code></pre>
+        <p>Pass a new host object when your note list changes. Shuttle
+        refreshes what it derives from the host, such as unlinked mentions,
+        when the object's identity changes.</p>
+      </div>
+      <aside class="margin">
+        <p class="note">Cord's own host is a little over a hundred lines, most of it forwarding calls to the app's backend.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="source">
+    <div class="wrap grid">
+      <p class="label">Open source</p>
+      <div class="body">
+        <h2>AGPL-3.0-or-later.</h2>
+        <div class="pair">
+          <div>
+            <h3><a href="https://github.com/cord-note/shuttle">cord-note/shuttle</a></h3>
+            <p>Source, issues, the full props reference and the document
+            format.</p>
+          </div>
+          <div>
+            <h3><a href="../">Cord</a></h3>
+            <p>The desktop notebook Shuttle was written for, and its first
+            user.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Shuttle · AGPL-3.0-or-later</p>
+    <p><a href="https://github.com/cord-note">github.com/cord-note</a></p>
+  </div>
+</footer>
+
+<script src="../js/theme.js" type="module"></script>
+<script src="../js/motif.js" type="module"></script>
+</body>
+</html>
