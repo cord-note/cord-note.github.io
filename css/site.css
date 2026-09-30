@@ -266,6 +266,8 @@ code, pre, kbd {
   margin: 0 0 24px;
   max-width: 34ch;
 }
+/* Paths and identifiers keep their real case under uppercase notes. */
+.note code, .shot figcaption code { text-transform: none; letter-spacing: 0; }
 
 /* ---------- Hero ---------- */
 
@@ -546,6 +548,9 @@ pre .k { color: var(--accent); }
 }
 
 .hero .motif { max-width: 280px; margin-left: auto; }
+@media (max-width: 979px) {
+  .hero .motif { display: none; }
+}
 
 /* Draw-in. Only armed when JS has run (html.js), so without scripts the
    motif is simply shown complete. */

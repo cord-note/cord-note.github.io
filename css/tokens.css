@@ -25,13 +25,13 @@
   --grid-line: transparent;
 
   /* Type */
-  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-display: 'Newsreader', 'Iowan Old Style', Georgia, serif;
   --font-body: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Menlo, monospace;
 
-  --display-weight: 420;
+  --display-weight: 400;
   --display-tracking: -0.015em;
-  --display-axes: 'SOFT' 100, 'WONK' 1;
+  --display-axes: normal;
   --display-style: normal;
 
   --label-font: var(--font-body);
@@ -46,7 +46,7 @@
   --note-style: italic;
   --note-transform: none;
   --note-tracking: 0;
-  --note-axes: 'SOFT' 100, 'WONK' 1;
+  --note-axes: normal;
 
   /* Structure */
   --section-number: '';
@@ -92,7 +92,7 @@
 
     --display-weight: 300;
     --display-tracking: -0.03em;
-    --display-axes: 'SOFT' 0, 'WONK' 0;
+    --display-axes: normal;
 
     --label-font: var(--font-mono);
     --label-size: 0.6875rem;
@@ -142,7 +142,7 @@
 
   --display-weight: 300;
   --display-tracking: -0.03em;
-  --display-axes: 'SOFT' 0, 'WONK' 0;
+  --display-axes: normal;
 
   --label-font: var(--font-mono);
   --label-size: 0.6875rem;
