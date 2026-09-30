@@ -1,7 +1,7 @@
 # cord-note.github.io — remake
 
 **Date:** 2026-09-30
-**Status:** Draft, awaiting review
+**Status:** Approved, implemented
 **Supersedes:** `2026-09-16-org-pages-site-design.md`
 
 ## Purpose
@@ -43,7 +43,7 @@ grid, the content and the type families, but each has its own treatment.
 
 - Warm off-white paper (about `#f4f0e8`), ink-black text (about `#1c1a17`),
   oxblood accent (about `#7a2630`).
-- Serif display headlines (Fraunces or Newsreader, Google Fonts), a humanist
+- Serif display headlines (Newsreader, Google Fonts), a humanist
   sans for body text, mono for code and file names.
 - Hairline rules instead of boxed cards. Margin annotations beside the text,
   set small and italic, like marginalia.
@@ -95,8 +95,9 @@ theme; each theme restyles the same markup.
 5. **Search as you type** — full-text search in Rust against SQLite FTS5.
 6. **Screenshot spread** — transclusion, blocks, palette.
 7. **Install** — Windows `.exe`, macOS Apple Silicon `.dmg`, Linux `.deb`,
-   `.rpm` and AppImage. The unsigned-binary notes (SmartScreen, Gatekeeper,
-   `chmod +x`) are kept.
+   `.rpm` and AppImage. `.rpm` shows "Coming with 2.0" until a release carries
+   one, then `releases.js` turns it into a button. The unsigned-binary notes
+   (SmartScreen, Gatekeeper, `chmod +x`) are kept.
 8. **Built on Shuttle** — short teaser linking to `/shuttle/`.
 9. **Open source** — AGPL-3.0, links to both repositories.
 
@@ -122,9 +123,11 @@ Slim header: Cord, Shuttle, GitHub, theme toggle. Footer: licence and links.
 
 ## Download links
 
-As before: every button is written into the HTML pointing at
-`https://github.com/cord-note/cord/releases/latest` and works without
-JavaScript. `releases.js` queries the public releases API and, on success,
+Every button is written into the HTML pointing at
+`https://github.com/cord-note/cord/releases` and works without JavaScript.
+`releases.js` takes the newest non-draft release from the public releases API
+(`/releases/latest` skips pre-releases, so it would offer v1.7 while 2.0 is in
+beta) and, on success,
 rewrites each button to its asset and fills in the version. `platformFor` gains
 `.rpm`. Any failure (offline, rate limit, blocked script) leaves the static links
 alone.
