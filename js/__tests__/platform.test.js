@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { detectOS, platformFor } from '../platform.js';
+import { detectOS, pickRelease, platformFor } from '../platform.js';
 
 describe('platformFor', () => {
   test.each([
@@ -38,5 +38,21 @@ describe('detectOS', () => {
   test('phones are not desktops', () => {
     expect(detectOS('Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', '')).toBeNull();
     expect(detectOS('Mozilla/5.0 (Linux; Android 14)', '')).toBeNull();
+  });
+});
+
+describe('pickRelease', () => {
+  test('newest non-draft wins, pre-releases included', () => {
+    const list = [
+      { tag_name: 'v2.1.0', draft: true, assets: [] },
+      { tag_name: 'v2.0.0-beta.1', draft: false, prerelease: true, assets: [] },
+      { tag_name: 'v1.7.0-beta.1', draft: false, prerelease: false, assets: [] },
+    ];
+    expect(pickRelease(list)?.tag_name).toBe('v2.0.0-beta.1');
+  });
+  test('nothing usable', () => {
+    expect(pickRelease([])).toBeNull();
+    expect(pickRelease(null)).toBeNull();
+    expect(pickRelease([{ tag_name: 'v1', draft: false }])).toBeNull();
   });
 });

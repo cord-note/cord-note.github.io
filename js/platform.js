@@ -29,3 +29,13 @@ export function detectOS(userAgent, uaPlatform) {
   if (/linux|x11/.test(source)) return 'linux';
   return null;
 }
+
+/* The release the site offers: the newest one that is not a draft. The
+   /releases/latest endpoint skips pre-releases, and Cord's current line is a
+   beta, so it would advertise the previous version. The API lists newest
+   first. Returns null when nothing has a usable asset list. */
+export function pickRelease(releases) {
+  if (!Array.isArray(releases)) return null;
+  const release = releases.find((r) => r && !r.draft);
+  return release && Array.isArray(release.assets) ? release : null;
+}
