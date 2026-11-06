@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" data-theme-key="shuttle-site-theme">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,11 +12,14 @@
 <meta property="og:image" content="https://cord-note.github.io/assets/og-shuttle.png">
 <meta name="twitter:card" content="summary_large_image">
 <script>
-  // Applies the saved theme before first paint.
-  try {
-    var saved = localStorage.getItem('shuttle-site-theme');
-    if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
-  } catch (e) {}
+  // Uses the saved choice if there is one, otherwise the device theme, before first paint.
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('cord-site-theme'); } catch (e) {}
+    document.documentElement.dataset.theme = saved === 'light' || saved === 'dark'
+      ? saved
+      : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  })();
 </script>
 <link rel="icon" href="../assets/shuttle-favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -56,7 +59,7 @@
         </div>
         <a class="btn btn-lg" href="#try">Try it in the page</a>
       </div>
-      <p class="hero-meta mono"><span data-npm-version>v0.4.0</span> · React 18 or 19 · ESM only · <span class="nowrap">AGPL-3.0-or-later</span></p>
+      <p class="hero-meta"><span class="mono" data-npm-version>v0.4.0</span> · React 18 or 19 · ESM only · <span class="nowrap">AGPL-3.0-or-later</span></p>
     </div>
   </section>
 
