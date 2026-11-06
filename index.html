@@ -1,394 +1,342 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-theme-key="cord-site-theme">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cord — local-first notes as a graph</title>
-<meta name="description" content="Cord is a local-first desktop notebook. Wiki links, addressable blocks and transclusion, with every note kept in a database on your own machine.">
+<title>Cord: linked notes that stay on your computer</title>
+<meta name="description" content="Cord is a desktop notes app. Type [[ to link notes, tag a single paragraph, quote a block by reference. Everything stays in a database on your computer.">
 <meta property="og:title" content="Cord">
-<meta property="og:description" content="Your notes, and every line between them. A local-first desktop notebook.">
+<meta property="og:description" content="Linked notes that stay on your computer. Windows, macOS and Linux.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://cord-note.github.io/">
-<meta property="og:image" content="https://cord-note.github.io/assets/hero.png">
-<meta name="color-scheme" content="light dark">
+<meta property="og:image" content="https://cord-note.github.io/assets/og-cord.png">
+<meta name="twitter:card" content="summary_large_image">
 <script>
-  /* Applies a saved theme before first paint, and arms the motif animation. */
-  (function () {
-    var root = document.documentElement;
-    root.classList.add('js');
-    try {
-      var theme = localStorage.getItem('cord-site-theme');
-      if (theme === 'light' || theme === 'dark') root.dataset.theme = theme;
-    } catch (e) {}
-  })();
+  // Applies the saved theme before first paint.
+  try {
+    var saved = localStorage.getItem('cord-site-theme');
+    if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+  } catch (e) {}
 </script>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Instrument+Sans:wght@400..600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="css/tokens.css">
-<link rel="stylesheet" href="css/site.css">
+<link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/cord.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="site-header">
-  <div class="wrap">
-    <a class="brand" href="./" aria-label="Cord home">
-      <svg viewBox="0 0 1025 1024" aria-hidden="true"><path fill="currentColor" d="M1004.66,473.73l-208.64-365.83c-14.47-25.37-41.38-41.1-70.58-41.25l-421.14-2.23c-29.21-.15-56.28,15.28-71.02,40.5L20.78,468.52c-14.74,25.22-14.9,56.38-.43,81.75l208.64,365.83c14.47,25.37,41.38,41.1,70.58,41.25l421.14,2.23c29.21.15,56.28-15.28,71.02-40.5l212.5-363.61c14.74-25.22,14.9-56.38.43-81.75ZM911.12,527.75l-132.05,225.95c-13.6,23.27-47.27,23.17-60.73-.18l-161.37-279.87c-6.21-10.76-17.64-17.45-30.07-17.57l-323.04-3.23c-26.95-.27-43.57-29.55-29.96-52.83l132.05-225.95c6.33-10.83,17.96-17.46,30.5-17.4l364.14,1.93c12.54.07,24.1,6.82,30.31,17.72l180.4,316.32c6.21,10.9,6.14,24.28-.19,35.11Z"/></svg>
-      Cord
-    </a>
-    <nav class="site-nav" aria-label="Site">
-      <a href="./" aria-current="page">Cord</a>
-      <a href="shuttle/">Shuttle</a>
-      <a class="nav-optional" href="https://github.com/cord-note">GitHub</a>
-      <button class="theme-toggle" id="theme-toggle" type="button" hidden>
-        <span class="swatch" aria-hidden="true"></span><span class="toggle-text">Paper</span>
-      </button>
-    </nav>
+<header class="bar">
+  <a class="bar-brand" href="./" aria-label="Cord home">
+    <svg viewBox="0 0 280.33 249.5" fill="currentColor" aria-hidden="true"><path d="M277.34,114.08L219.19,12.12c-4.03-7.07-11.53-11.45-19.67-11.5L82.13,0c-8.14-.04-15.69,4.26-19.79,11.29L3.11,112.63c-4.11,7.03-4.15,15.71-.12,22.79l58.15,101.96c4.03,7.07,11.53,11.45,19.67,11.5l117.38.62c8.14.04,15.69-4.26,19.79-11.29l59.23-101.34c4.11-7.03,4.15-15.71.12-22.79ZM251.27,129.14l-36.8,62.98c-3.79,6.49-13.17,6.46-16.93-.05l-44.98-78c-1.73-3-4.92-4.86-8.38-4.9l-90.04-.9c-7.51-.08-12.14-8.24-8.35-14.72l36.8-62.98c1.76-3.02,5-4.87,8.5-4.85l101.49.54c3.5.02,6.72,1.9,8.45,4.94l50.28,88.16c1.73,3.04,1.71,6.77-.05,9.79Z"/></svg>
+    Cord
+  </a>
+  <div class="bar-center">
+    <button class="pill" id="palette-open" type="button" hidden>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>
+      <span>Search or jump to...</span>
+      <kbd>Ctrl K</kbd>
+    </button>
   </div>
+  <nav class="bar-nav" aria-label="Site">
+    <a class="bar-dl" href="#download">Download</a>
+    <a href="shuttle/">Shuttle</a>
+    <a href="https://github.com/cord-note/cord">GitHub</a>
+    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch between light and dark" hidden>
+      <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/></svg>
+      <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 9.5A6 6 0 0 1 6.5 2.5a6 6 0 1 0 7 7Z"/></svg>
+    </button>
+  </nav>
 </header>
 
 <main id="main">
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-grid">
-        <div>
-          <p class="label">Cord · a desktop notebook</p>
-          <h1>Your notes, and every <em>line</em> between them.</h1>
-          <p class="lede">
-            Cord treats notes as a graph. Write with wiki links, tag a single
-            paragraph, quote one note inside another, and keep all of it in a
-            database on your own machine.
-          </p>
-          <div class="cta">
-            <a class="btn btn-primary" id="hero-download" href="#install">Download Cord</a>
-            <a class="btn" href="https://github.com/cord-note/cord">View source</a>
-          </div>
-          <p class="meta"><span data-version>v2.0.0-beta.1</span> · Windows · macOS · Linux · AGPL-3.0</p>
-        </div>
-
-        <svg class="motif" viewBox="0 0 280 300" aria-hidden="true">
-          <g class="hand">
-            <path class="link" pathLength="1" d="M60 50 Q 92 104 150 140"/>
-            <path class="link" pathLength="1" d="M220 40 Q 196 96 150 140"/>
-            <path class="link" pathLength="1" d="M60 50 Q 140 22 220 40"/>
-            <path class="link" pathLength="1" d="M150 140 Q 84 166 40 220"/>
-            <path class="link" pathLength="1" d="M150 140 Q 206 172 230 230"/>
-            <path class="link" pathLength="1" d="M40 220 Q 78 272 140 280"/>
-            <path class="link" pathLength="1" d="M230 230 Q 196 276 140 280"/>
-            <circle class="node" cx="60" cy="50" r="6"/>
-            <circle class="node" cx="220" cy="40" r="6"/>
-            <circle class="node hot" cx="150" cy="140" r="8"/>
-            <circle class="node" cx="40" cy="220" r="6"/>
-            <circle class="node" cx="230" cy="230" r="6"/>
-            <circle class="node" cx="140" cy="280" r="6"/>
-            <text x="18" y="36">reading list</text>
-            <text x="200" y="22">ideas</text>
-            <text x="164" y="136">today</text>
-            <text x="4" y="244">sources</text>
-            <text x="212" y="256">drafts</text>
-          </g>
-          <g class="precise">
-            <line class="tick" x1="0" y1="140" x2="280" y2="140" stroke-dasharray="2 4"/>
-            <line class="tick" x1="150" y1="0" x2="150" y2="300" stroke-dasharray="2 4"/>
-            <path class="link" pathLength="1" d="M60 50 L150 140"/>
-            <path class="link" pathLength="1" d="M220 40 L150 140"/>
-            <path class="link" pathLength="1" d="M60 50 L220 40"/>
-            <path class="link" pathLength="1" d="M150 140 L40 220"/>
-            <path class="link" pathLength="1" d="M150 140 L230 230"/>
-            <path class="link" pathLength="1" d="M40 220 L140 280"/>
-            <path class="link" pathLength="1" d="M230 230 L140 280"/>
-            <rect class="node" x="56" y="46" width="8" height="8"/>
-            <rect class="node" x="216" y="36" width="8" height="8"/>
-            <rect class="node hot" x="145" y="135" width="10" height="10"/>
-            <rect class="node" x="36" y="216" width="8" height="8"/>
-            <rect class="node" x="226" y="226" width="8" height="8"/>
-            <rect class="node" x="136" y="276" width="8" height="8"/>
-            <text x="30" y="36">N·01</text>
-            <text x="228" y="30">N·02</text>
-            <text x="162" y="134">N·03 ← 4</text>
-            <text x="4" y="240">N·04</text>
-            <text x="238" y="250">N·05</text>
-            <text x="152" y="298">N·06</text>
-          </g>
-        </svg>
+  <section class="lock">
+    <div class="lock-art" aria-hidden="true"><canvas id="scene" class="scene"></canvas></div>
+    <div class="wrap lock-form">
+      <h1>Linked notes that stay on your computer.</h1>
+      <p class="lede">Type <code>[[</code> to link any note. No online account, no cloud.</p>
+      <div class="lock-actions">
+        <a class="btn btn-primary btn-lg" id="hero-download" href="#download">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8.5M4.5 7.5 8 11l3.5-3.5M2.5 14h11"/></svg>
+          <span data-hero-label>Download Cord</span>
+        </a>
+        <a class="btn btn-lg" href="#download">All systems</a>
       </div>
+      <p class="lock-meta"><span class="mono" id="hero-meta">v2.4.1 · Windows, macOS, Linux</span><br>Free and open source. <a href="#unsigned">Not code-signed yet</a>, so your system will warn you once.</p>
+    </div>
+  </section>
 
-      <figure class="shot">
-        <img src="assets/hero.png" alt="The Cord editor: a note with tags, inline maths and a backlinks bar along the bottom." width="2560" height="1392" fetchpriority="high">
+  <div class="wrap rise-wrap">
+    <figure class="window" id="rise">
+      <img class="only-dark" src="assets/shots/note-dark.webp" width="2480" height="1560" alt="The Cord window: a list of notes on the left, and a note on signal detection theory with tags, formulas and a backlinks bar." fetchpriority="high">
+      <img class="only-light" src="assets/shots/note-light.webp" width="2480" height="1560" alt="The same Cord window in the light colour mode." loading="lazy">
+    </figure>
+  </div>
+
+  <section class="feature" id="links">
+    <div class="wrap feature-grid">
+      <div class="feature-copy">
+        <h2>Type <span class="brackets">[[</span> to link a note.</h2>
+        <p class="lede">Pick a note from the list and the link shows up on both ends: the other note lists it in its backlinks bar. Titles you mention without linking get picked out too, so you can link them later.</p>
+      </div>
+      <div class="demo" data-demo="links" role="img" aria-label="Animation: typing two brackets opens a list of notes. Choosing one inserts a link, and the other note's backlink count goes up by one.">
+        <div class="pane">
+          <p class="pane-title">Essay Plan</p>
+          <p class="pane-text"><span data-typed>Diekelmann and Born cover this in </span><span class="wikilink" data-link>Reading: Diekelmann &amp; Born</span><span class="caret" data-caret></span></p>
+          <ul class="suggest" data-suggest hidden>
+            <li class="on">Reading: Diekelmann &amp; Born</li>
+            <li>Reading: Wilson &amp; McNaughton</li>
+          </ul>
+        </div>
+        <div class="pane pane-b">
+          <p class="pane-title">Reading: Diekelmann &amp; Born</p>
+          <p class="pane-text muted">Sleep supports both declarative and procedural memory, by different routes.</p>
+          <div class="backlinks"><span data-count>1 backlink</span><span class="pill-note" data-back>Essay Plan</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature feature-flip" id="blocks">
+    <div class="wrap feature-grid">
+      <div class="feature-copy">
+        <h2>Tag one paragraph.</h2>
+        <p class="lede">A notepad is a page of blocks, and each block has its own address. Tags and links can point at a single paragraph, with no need to tag the whole page.</p>
+        <p class="aside">Notes and notepads share one format, so converting between them changes nothing in the document. A whole list counts as one block.</p>
+      </div>
+      <div class="demo" data-demo="blocks" role="img" aria-label="Animation: the pointer moves to one paragraph in a notepad, opens its block menu and adds an exam tag beside that paragraph only.">
+        <div class="pane pane-tall">
+          <p class="pane-title">Lecture 1</p>
+          <div class="block"><p class="pane-h">Systems consolidation</p></div>
+          <div class="block" data-target>
+            <span class="grip" data-grip aria-hidden="true"><svg viewBox="0 0 10 16" fill="currentColor"><circle cx="2.5" cy="3" r="1.3"/><circle cx="7.5" cy="3" r="1.3"/><circle cx="2.5" cy="8" r="1.3"/><circle cx="7.5" cy="8" r="1.3"/><circle cx="2.5" cy="13" r="1.3"/><circle cx="7.5" cy="13" r="1.3"/></svg></span>
+            <p class="pane-text">Slow and distributed. The trace moves from the hippocampus to the neocortex over days to years.</p>
+            <span class="chip" data-chip><i style="background:#f7768e"></i>exam</span>
+            <ul class="menu" data-menu hidden>
+              <li>Turn into</li><li>Duplicate</li><li data-tagitem>Add tag</li><li>Delete</li>
+            </ul>
+          </div>
+          <div class="block"><p class="pane-text">This is the one the sleep literature is almost always about.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="quote">
+    <div class="wrap feature-grid">
+      <div class="feature-copy">
+        <h2>Quote a block. Edit it once.</h2>
+        <p class="lede">A quote is a reference to the original block. Cord reads the text from its source every time it shows it, so the quote can't go stale.</p>
+        <p class="aside">Quotes are read-only and link back to where they came from.</p>
+      </div>
+      <div class="demo" data-demo="quote" role="img" aria-label="Animation: a sentence is edited in Lecture 1, and the same sentence quoted inside Essay Plan changes at the same moment.">
+        <div class="pane">
+          <p class="pane-title">Lecture 1</p>
+          <p class="pane-text"><span data-source>Papers that conflate the two produce arguments that cannot be settled.</span><span class="caret" data-caret hidden></span></p>
+        </div>
+        <div class="pane pane-b">
+          <p class="pane-title">Essay Plan</p>
+          <p class="pane-text">From the first lecture:</p>
+          <blockquote class="ref">
+            <span class="ref-from">Lecture 1 <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7.5l5-5M3.5 2.5h4v4"/></svg></span>
+            <span data-mirror>Papers that conflate the two produce arguments that cannot be settled.</span>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature feature-flip" id="search">
+    <div class="wrap feature-grid">
+      <div class="feature-copy">
+        <h2>Search as you type.</h2>
+        <p class="lede">Full-text search runs in Rust against SQLite, inside the app. It matches inside words, so a fragment is enough.</p>
+      </div>
+      <div class="demo" data-demo="search" role="img" aria-label="Animation: typing consol into the search box narrows twelve notes down to three, including one that only matches inside the word reconsolidation.">
+        <div class="pane search-pane">
+          <div class="search-box"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><span data-query>consol</span><span class="caret" data-caret></span></div>
+          <p class="search-count"><span data-results>3 notes</span></p>
+          <ul class="search-list" data-list>
+            <li>Lecture 1: What Consolidation Means</li>
+            <li>Seminar: The Reconsolidation Debate</li>
+            <li>Essay Plan: Does Sleep Cause Consolidation?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature keyboard" id="keyboard">
+    <div class="wrap feature-grid">
+      <div class="feature-copy">
+        <h2>Everything from the keyboard.</h2>
+        <p class="lede">A command palette reaches the rest of the app, and every shortcut can be rebound. This page has one too: press <kbd>Ctrl K</kbd>.</p>
+      </div>
+      <figure class="window window-small">
+        <img class="only-dark" src="assets/shots/palette-crop-dark.webp" width="836" height="742" alt="The Cord command palette open over a note, listing commands such as New Note and Toggle Trash with their shortcuts." loading="lazy">
+        <img class="only-light" src="assets/shots/palette-crop-light.webp" width="836" height="742" alt="The command palette in the light colour mode." loading="lazy">
       </figure>
     </div>
   </section>
 
-  <section class="section" id="local">
-    <div class="wrap grid">
-      <p class="label">Local first</p>
-      <div class="body">
-        <h2>It lives on your machine.</h2>
-        <p class="lede">
-          Every note is a row in a SQLite database in your own user folder.
-          Cord works with the network cable pulled out, because it never
-          needed the network. There is no cloud account, no sync service and
-          no telemetry.
-        </p>
-        <p>
-          Each person who uses the computer gets a local account with a PIN
-          lock screen and their own settings. The lock keeps the next person at
-          the desk out of your notes. It is not encryption, and Cord does not
-          pretend it is; encrypting the database is a later step.
-        </p>
-      </div>
-      <aside class="margin">
-        <p class="note">On Linux the database lives in <code>~/.local/share/cord</code>, as the XDG spec asks. macOS and Windows use <code>~/.cord</code>.</p>
-      </aside>
-    </div>
-  </section>
-
-  <section class="section" id="graph">
-    <div class="wrap grid">
-      <p class="label">Links</p>
-      <div class="body">
-        <h2>A graph, not a filing cabinet.</h2>
-        <p class="lede">
-          Type <code>[[</code> and link to another note. Every link is visible
-          from both ends: each note lists what points at it, and mentions of
-          its title that are not linked yet are picked out so you can link
-          them.
-        </p>
-        <p>
-          Vaults keep unrelated work apart. Tags cut across the notes inside a
-          vault. Links are what make the collection worth more than the notes
-          in it.
-        </p>
-      </div>
-      <aside class="margin">
-        <svg class="motif" viewBox="0 0 240 110" aria-hidden="true">
-          <g class="hand">
-            <path class="link" pathLength="1" d="M30 50 Q 120 -6 210 50"/>
-            <path class="link" pathLength="1" d="M200 42 L210 50 L198 55"/>
-            <path class="link" pathLength="1" d="M210 64 Q 120 120 30 64"/>
-            <path class="link" pathLength="1" d="M40 72 L30 64 L42 59"/>
-            <circle class="node" cx="30" cy="57" r="7"/>
-            <circle class="node hot" cx="210" cy="57" r="7"/>
-            <text x="92" y="14">[[link]]</text>
-            <text x="88" y="106">backlink</text>
-          </g>
-          <g class="precise">
-            <path class="link" pathLength="1" d="M40 46 L200 46"/>
-            <path class="link" pathLength="1" d="M192 41 L200 46 L192 51"/>
-            <path class="link" pathLength="1" d="M200 68 L40 68"/>
-            <path class="link" pathLength="1" d="M48 63 L40 68 L48 73"/>
-            <rect class="node" x="22" y="49" width="14" height="14"/>
-            <rect class="node hot" x="204" y="49" width="14" height="14"/>
-            <line class="tick" x1="120" y1="36" x2="120" y2="78"/>
-            <text x="72" y="30">FROM → TO</text>
-            <text x="72" y="94">TO ← FROM</text>
-          </g>
-        </svg>
-        <p class="note">Links are read from the document itself on every save, so there is no second list to fall out of step.</p>
-      </aside>
-    </div>
-  </section>
-
-  <section class="section" id="blocks">
-    <div class="wrap grid">
-      <p class="label">Notepads</p>
-      <div class="body">
-        <h2>Pages of blocks you can point at.</h2>
-        <p class="lede">
-          Cord has two kinds of note. A note is for quick capture. A notepad is
-          a page of blocks (paragraphs, headings, lists, code, tables, maths),
-          and every block has its own stable address.
-        </p>
-        <p>
-          Tag or link a single block rather than the whole page. Quote a block
-          inside another note and it stays a reference: the text is read from
-          its source every time it is shown, so it cannot go stale. Turning a
-          note into a notepad changes nothing in the document.
-        </p>
-      </div>
-      <aside class="margin">
-        <svg class="motif" viewBox="0 0 240 150" aria-hidden="true">
-          <g class="hand">
-            <path class="link" pathLength="1" d="M12 12 Q 60 9 96 13 L 96 30 Q 50 33 12 29 Z"/>
-            <path class="link" pathLength="1" d="M12 42 Q 55 39 96 43 L 97 66 Q 52 69 13 65 Z"/>
-            <path class="link" pathLength="1" d="M12 78 Q 60 75 96 79 L 96 96 Q 50 99 12 95 Z"/>
-            <path class="link" pathLength="1" d="M12 108 Q 60 105 96 109 L 96 126 Q 50 129 12 125 Z"/>
-            <path class="link" pathLength="1" d="M144 70 Q 190 66 228 71 L 227 96 Q 186 99 144 95 Z"/>
-            <path class="link" pathLength="1" d="M100 55 Q 124 40 140 76"/>
-            <circle class="node hot" cx="100" cy="55" r="4"/>
-            <text x="150" y="60">quoted, not copied</text>
-          </g>
-          <g class="precise">
-            <rect class="node" x="12" y="12" width="84" height="18"/>
-            <rect class="node hot" x="12" y="42" width="84" height="24"/>
-            <rect class="node" x="12" y="78" width="84" height="18"/>
-            <rect class="node" x="12" y="108" width="84" height="18"/>
-            <path class="link" pathLength="1" d="M144 70 H228 V96 H144 Z" stroke-dasharray="3 3"/>
-            <path class="link" pathLength="1" d="M96 54 H120 V83 H144"/>
-            <text x="104" y="40">#b7Qx</text>
-            <text x="144" y="112">REF #b7Qx</text>
-          </g>
-        </svg>
-        <p class="note">A whole list is one block, so a single bullet cannot be tagged on its own.</p>
-      </aside>
-    </div>
-  </section>
-
-  <section class="section" id="search">
-    <div class="wrap grid">
-      <p class="label">Search</p>
-      <div class="body">
-        <h2>Search that keeps up with typing.</h2>
-        <p class="lede">
-          Full-text search runs in Rust, straight against SQLite's FTS5 index,
-          inside the app itself. Results arrive as you type, not after you
-          stop.
-        </p>
-        <p>
-          It matches inside words, so a fragment is enough. The rest of Cord is
-          reachable the same way: a command palette and rebindable shortcuts
-          for everything.
-        </p>
-      </div>
-      <aside class="margin">
-        <p class="note">The budget is 50&nbsp;ms per keystroke. No round trip to a background process sits in the way.</p>
-      </aside>
-    </div>
-  </section>
-
-  <section class="section" id="look">
-    <div class="wrap grid">
-      <p class="label">A look at it</p>
-      <div class="body">
-        <h2>Quiet by default.</h2>
-        <p class="lede">Seven themes, light and dark. These are the mono dark default.</p>
-      </div>
-      <div class="full spread">
-        <figure class="shot">
-          <img src="assets/transclusion.png" alt="A Cord note quoting a block transcluded from another note, shown inset with a link back to its source." loading="lazy" width="2560" height="1392">
-          <figcaption>Transclusion: a block from another note, by reference.</figcaption>
-        </figure>
-        <figure class="shot">
-          <img src="assets/blocks.png" alt="A Cord note with tags attached to individual blocks in the right-hand gutter, beside a syntax-highlighted code block." loading="lazy" width="2560" height="1392">
-          <figcaption>Tags on a single block, not the whole note.</figcaption>
-        </figure>
-        <figure class="shot">
-          <img src="assets/palette.png" alt="The Cord command palette open over a note, listing navigation and settings commands with their shortcuts." loading="lazy" width="2560" height="1392">
-          <figcaption>Everything from the keyboard.</figcaption>
-        </figure>
+  <section class="moving" id="moving">
+    <div class="wrap">
+      <h2>Coming from Obsidian or Notion?</h2>
+      <div class="moving-grid">
+        <div>
+          <h3>What carries over</h3>
+          <p>The <code>[[</code> habit, backlinks, tags, markdown shortcuts and a command palette.</p>
+        </div>
+        <div>
+          <h3>Bringing your notes</h3>
+          <p>Paste a note's markdown and it becomes formatted text. It's one note at a time, because there is no bulk importer yet.</p>
+        </div>
+        <div>
+          <h3>What's different</h3>
+          <p>Notes live in one database, not a folder of files. There is no graph view, no plugin system and no sync yet.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="install">
-    <div class="wrap grid">
-      <p class="label">Install</p>
-      <div class="body">
-        <h2>Download.</h2>
-        <p class="lede">
-          Cord 2.0 is in beta. Every installer is built by CI from the same
-          tag; Windows has had the most real use.
-        </p>
-
-        <ul class="downloads">
-          <li data-os="windows">
-            <span class="os">Windows</span>
-            <span class="detail">Windows 10 and 11, 64-bit · <code>.exe</code></span>
-            <a class="btn btn-primary" data-platform="windows" href="https://github.com/cord-note/cord/releases">Download</a>
-          </li>
-          <li data-os="macos">
-            <span class="os">macOS</span>
-            <span class="detail">Apple Silicon · <code>.dmg</code></span>
-            <a class="btn btn-primary" data-platform="macos" href="https://github.com/cord-note/cord/releases">Download</a>
-          </li>
-          <li data-os="linux">
-            <span class="os">Debian, Ubuntu</span>
-            <span class="detail">x86-64 · <code>.deb</code></span>
-            <a class="btn" data-platform="deb" href="https://github.com/cord-note/cord/releases">Download</a>
-          </li>
-          <li data-os="linux">
-            <span class="os">Fedora, openSUSE</span>
-            <span class="detail">x86-64 · <code>.rpm</code></span>
-            <span class="soon" data-soon="rpm">Coming with 2.0</span>
-          </li>
-          <li data-os="linux">
-            <span class="os">Any Linux</span>
-            <span class="detail">x86-64 · <code>.AppImage</code></span>
-            <a class="btn" data-platform="appimage" href="https://github.com/cord-note/cord/releases">Download</a>
-          </li>
+  <section class="try" id="try">
+    <div class="wrap try-grid">
+      <div>
+        <h2>Try the editor.</h2>
+        <p class="lede">This is Shuttle, the editor inside Cord, running in this page. Nothing you type leaves the tab.</p>
+        <ul class="try-hints">
+          <li><kbd># </kbd> heading</li>
+          <li><kbd>**bold**</kbd> bold</li>
+          <li><kbd>[[</kbd> link a note</li>
+          <li><kbd>/</kbd> everything else</li>
         </ul>
-
-        <div class="callout">
-          <h3>The installers are not code-signed yet</h3>
-          <p>Windows and macOS will both object the first time. Nothing is
-          wrong; there is simply no certificate behind the binary yet.</p>
-          <ul>
-            <li><strong>Windows.</strong> SmartScreen calls it an unrecognised
-            app. Choose <em>More info</em>, then <em>Run anyway</em>.</li>
-            <li><strong>macOS.</strong> Gatekeeper refuses to open it.
-            Right-click the app, choose <em>Open</em>, then confirm.
-            Double-clicking does not offer that option.</li>
-            <li><strong>Linux.</strong> no warning. Mark the AppImage
-            executable with <code>chmod +x</code> before running it.</li>
-          </ul>
-        </div>
       </div>
-      <aside class="margin">
-        <p class="note">Updates are signed, and Cord checks them before installing.</p>
-      </aside>
-    </div>
-  </section>
-
-  <section class="section" id="shuttle">
-    <div class="wrap grid">
-      <p class="label">The editor</p>
-      <div class="body">
-        <h2>Built on Shuttle.</h2>
-        <p class="lede">
-          Cord's editor is its own project: Shuttle, an open-source React
-          editor built on Tiptap 3. Wiki links, notepad blocks, transclusion
-          and markdown that vanishes as you type all come from it. You can
-          put it in your own app too.
-        </p>
-        <div class="cta">
-          <a class="btn" href="shuttle/">Read about Shuttle</a>
-        </div>
+      <div class="try-editor" id="try-editor" data-editor-mode="note">
+        <button class="btn" type="button" data-editor-load>Load the editor</button>
+        <noscript><p>The live editor needs JavaScript.</p></noscript>
       </div>
     </div>
   </section>
 
-  <section class="section" id="source">
-    <div class="wrap grid">
-      <p class="label">Open source</p>
-      <div class="body">
-        <h2>All of it, under AGPL-3.0.</h2>
-        <div class="pair">
-          <div>
-            <h3><a href="https://github.com/cord-note/cord">cord</a></h3>
-            <p>The desktop app: a Tauri shell, a Bun sidecar, a React
-            interface and SQLite.</p>
-          </div>
-          <div>
-            <h3><a href="https://github.com/cord-note/shuttle">shuttle</a></h3>
-            <p>The editor, published to npm as <code>shuttle-editor</code>.</p>
-          </div>
-        </div>
+  <section class="themes" id="themes">
+    <div class="wrap themes-head">
+      <h2>32 more themes, each light and dark.</h2>
+      <p class="lede">Mono is the default. The rest live in <a href="https://github.com/cord-note/cord-themes">cord-themes</a>. Import a folder, a zip or a Git repo, or write your own in CSS.</p>
+    </div>
+    <div class="wrap themes-shots">
+      <figure class="window"><img src="assets/shots/theme-catppuccin.webp" width="2480" height="1560" alt="Cord with the Catppuccin theme in dark mode." loading="lazy"><figcaption>Catppuccin</figcaption></figure>
+      <figure class="window"><img src="assets/shots/theme-gruvbox.webp" width="2480" height="1560" alt="Cord with the Gruvbox theme in light mode." loading="lazy"><figcaption>Gruvbox, light</figcaption></figure>
+    </div>
+    <ul class="theme-wall" id="theme-wall" aria-label="Themes"></ul>
+    <p class="wrap theme-all"><a href="https://github.com/cord-note/cord-themes">See all 32 on GitHub</a></p>
+  </section>
+
+  <section class="spec" id="details">
+    <div class="wrap">
+      <h2>The details.</h2>
+      <dl class="spec-list">
+        <div><dt>Storage</dt><dd>Your notes live in a SQLite database in your user folder: <code>~/.cord</code> on Windows and macOS, <code>~/.local/share/cord</code> on Linux.</dd></div>
+        <div><dt>Network</dt><dd>Works offline. No online account and no telemetry. Cord checks GitHub for updates.</dd></div>
+        <div><dt>Sync</dt><dd>None yet. Your notes stay on the one computer.</dd></div>
+        <div><dt>Lock screen</dt><dd>Local accounts on your computer, unlocked with a PIN. The PIN keeps other people out of Cord. It does not encrypt your files.</dd></div>
+        <div><dt>Structure</dt><dd>Vaults keep separate work apart. Tags cut across the notes in a vault. Links connect any two notes.</dd></div>
+        <div><dt>Writing</dt><dd>Maths, tables, code highlighting, task lists, toggles, images and embeds. The editor is <a href="shuttle/">Shuttle</a>.</dd></div>
+        <div><dt>Source</dt><dd><a href="https://github.com/cord-note/cord">cord-note/cord</a> under AGPL-3.0. Built with Tauri, Bun, React and SQLite.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="download" id="download">
+    <div class="wrap">
+      <div class="download-head">
+        <h2>Download Cord.</h2>
+        <p class="mono download-version"><span data-version>v2.4.1</span></p>
+      </div>
+      <ul class="dl-list">
+        <li data-os="windows">
+          <span class="dl-os">Windows</span>
+          <span class="dl-detail">10 and 11, 64-bit</span>
+          <span class="dl-file mono" data-file="windows">Cord_2.4.1_x64-setup.exe</span>
+          <span class="dl-size mono" data-size="windows">35 MB</span>
+          <a class="btn" data-platform="windows" href="https://github.com/cord-note/cord/releases/latest">Download</a>
+        </li>
+        <li data-os="macos">
+          <span class="dl-os">macOS</span>
+          <span class="dl-detail">Apple Silicon</span>
+          <span class="dl-file mono" data-file="macos">Cord_2.4.1_aarch64.dmg</span>
+          <span class="dl-size mono" data-size="macos">31 MB</span>
+          <a class="btn" data-platform="macos" href="https://github.com/cord-note/cord/releases/latest">Download</a>
+        </li>
+        <li data-os="linux">
+          <span class="dl-os">Debian, Ubuntu</span>
+          <span class="dl-detail">x86-64</span>
+          <span class="dl-file mono" data-file="deb">Cord_2.4.1_amd64.deb</span>
+          <span class="dl-size mono" data-size="deb">43 MB</span>
+          <a class="btn" data-platform="deb" href="https://github.com/cord-note/cord/releases/latest">Download</a>
+        </li>
+        <li data-os="linux">
+          <span class="dl-os">Fedora</span>
+          <span class="dl-detail">x86-64</span>
+          <span class="dl-file mono" data-file="rpm">Cord-2.4.1-1.x86_64.rpm</span>
+          <span class="dl-size mono" data-size="rpm">43 MB</span>
+          <a class="btn" data-platform="rpm" href="https://github.com/cord-note/cord/releases/latest">Download</a>
+        </li>
+        <li data-os="linux">
+          <span class="dl-os">Arch</span>
+          <span class="dl-detail">x86-64, install with <code>pacman -U</code></span>
+          <span class="dl-file mono" data-file="arch">cord-bin-2.4.1-1-x86_64.pkg.tar.zst</span>
+          <span class="dl-size mono" data-size="arch">41 MB</span>
+          <a class="btn" data-platform="arch" href="https://github.com/cord-note/cord/releases/latest">Download</a>
+        </li>
+        <li data-os="linux">
+          <span class="dl-os">Any Linux</span>
+          <span class="dl-detail">x86-64, updates itself</span>
+          <span class="dl-file mono" data-file="appimage">Cord_2.4.1_amd64.AppImage</span>
+          <span class="dl-size mono" data-size="appimage">120 MB</span>
+          <a class="btn" data-platform="appimage" href="https://github.com/cord-note/cord/releases/latest">Download</a>
+        </li>
+      </ul>
+      <div class="unsigned" id="unsigned">
+        <h3>Not code-signed yet</h3>
+        <p>Windows and macOS will object the first time, because there is no certificate behind the installer. Updates are signed, and Cord checks them before installing.</p>
+        <ul>
+          <li><strong>Windows:</strong> SmartScreen calls it an unrecognised app. Choose More info, then Run anyway.</li>
+          <li><strong>macOS:</strong> Gatekeeper refuses to open it. Right-click the app, choose Open, then confirm.</li>
+          <li><strong>Linux:</strong> no warning. Mark the AppImage executable with <code>chmod +x</code> first.</li>
+        </ul>
       </div>
     </div>
   </section>
 </main>
 
-<footer class="site-footer">
-  <div class="wrap">
-    <p>Cord · AGPL-3.0</p>
-    <p><a href="https://github.com/cord-note">github.com/cord-note</a></p>
+<footer class="foot">
+  <div class="wrap foot-row">
+    <a class="foot-sign" href="https://github.com/Alexander-288">
+      <svg viewBox="0 0 530.35 353.49" fill="currentColor" aria-hidden="true"><path d="M.81,352.99L143.88,66.83C164.21,26.18,205.76.5,251.22.5h102.08l176.24,352.49H255c-22.31,0-36.81-23.49-26.82-43.44l37.09-74.06h88.02l-58.75-117.5h-58.75l-117.5,234.99H.81Z"/></svg>
+      Designed and built by Aleksander
+    </a>
+    <div class="foot-links">
+      <a href="shuttle/">Shuttle</a>
+      <a href="https://github.com/cord-note/cord">Source</a>
+      <a href="https://github.com/cord-note/cord/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/cord-note/cord-themes">Themes</a>
+      <span>AGPL-3.0</span>
+    </div>
   </div>
 </footer>
 
-<script src="js/theme.js" type="module"></script>
-<script src="js/motif.js" type="module"></script>
-<script src="js/releases.js" type="module"></script>
+<div class="palette" id="palette" hidden>
+  <div class="palette-box" role="dialog" aria-modal="true" aria-label="Search or jump">
+    <div class="palette-input">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>
+      <input id="palette-input" type="text" placeholder="Search or jump to..." aria-label="Search or jump to" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="palette-list">
+    </div>
+    <ul class="palette-list" id="palette-list" role="listbox"></ul>
+  </div>
+</div>
+
+<script type="module" src="js/theme.js"></script>
+<script type="module" src="js/cord.js"></script>
+<script type="module" src="js/releases.js"></script>
 </body>
 </html>

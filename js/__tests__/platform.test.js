@@ -1,5 +1,11 @@
 import { describe, expect, test } from 'bun:test';
-import { detectOS, pickRelease, platformFor } from '../platform.js';
+import { detectOS, formatSize, pickRelease, platformFor } from '../platform.js';
+
+describe('formatSize', () => {
+  test('rounds to whole megabytes', () => {
+    expect(formatSize(34932273)).toBe('35 MB');
+  });
+});
 
 describe('platformFor', () => {
   test.each([
@@ -8,6 +14,7 @@ describe('platformFor', () => {
     ['Cord_2.0.0_amd64.deb', 'deb'],
     ['Cord-2.0.0-1.x86_64.rpm', 'rpm'],
     ['Cord_2.0.0_amd64.AppImage', 'appimage'],
+    ['cord-bin-2.4.1-1-x86_64.pkg.tar.zst', 'arch'],
   ])('%s → %s', (name, platform) => {
     expect(platformFor(name)).toBe(platform);
   });

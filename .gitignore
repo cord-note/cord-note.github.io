@@ -1,2 +1,9 @@
 .impeccable/
 .playwright-mcp/
+.claude/
+.superpowers/
+docs/
+PRODUCT.md
+DESIGN.md
+node_modules/
+editor/dist/

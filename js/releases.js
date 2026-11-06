@@ -1,45 +1,31 @@
-/* Upgrades the download links using the public GitHub releases API.
-   The links already work without this file; all it adds is a direct asset
-   link, the version string, and a hero button for the visitor's OS.
-   Unauthenticated requests are limited to 60 per hour per IP, so every
-   failure path must leave the static links alone. */
+// Points download links at the newest release. Links work without this file.
+import { detectOS, formatSize, pickRelease, platformFor } from './platform.js';
 
-import { detectOS, pickRelease, platformFor } from './platform.js';
+const API = 'https://api.github.com/repos/cord-note/cord/releases?per_page=10';
+const LABEL = { windows: 'Windows', macos: 'macOS', linux: 'Linux' };
 
-const RELEASES_API =
-  'https://api.github.com/repos/cord-note/cord/releases?per_page=10';
+const os = detectOS(navigator.userAgent, navigator.userAgentData?.platform);
 
-const OS_LABEL = { windows: 'Windows', macos: 'macOS' };
-
-/* Windows and macOS each have one installer, so the hero button can point at
-   it. Linux has several formats, so it scrolls to the list instead. */
-function updateHero(os) {
+// Windows and macOS have one installer. Linux has several, so it goes to the list.
+function updateHero() {
+  document.querySelectorAll(`[data-os="${os}"]`).forEach((row) => row.classList.add('is-current'));
   const hero = document.getElementById('hero-download');
   if (!hero || !os) return;
+  hero.querySelector('[data-hero-label]').textContent = `Download for ${LABEL[os]}`;
 
-  document
-    .querySelectorAll(`[data-os="${os}"]`)
-    .forEach((row) => row.classList.add('is-current'));
-
-  const label = OS_LABEL[os];
   const link = document.querySelector(`a[data-platform="${os}"]`);
-  if (label && link) {
-    hero.textContent = `Download for ${label}`;
-    hero.href = link.href;
-  } else if (os === 'linux') {
-    hero.textContent = 'Download for Linux';
-  }
+  if (link) hero.href = link.href;
+  const meta = document.getElementById('hero-meta');
+  const size = document.querySelector(`[data-size="${os}"]`)?.textContent;
+  const version = document.querySelector('[data-version]')?.textContent;
+  if (meta) meta.textContent = [version, size, os === 'linux' ? 'deb, rpm, Arch, AppImage' : null].filter(Boolean).join(' · ');
 }
 
 async function enhance() {
-  const os = detectOS(navigator.userAgent, navigator.userAgentData?.platform);
-  updateHero(os);
-
+  updateHero();
   let release;
   try {
-    const response = await fetch(RELEASES_API, {
-      headers: { Accept: 'application/vnd.github+json' },
-    });
+    const response = await fetch(API, { headers: { Accept: 'application/vnd.github+json' } });
     if (!response.ok) return;
     release = pickRelease(await response.json());
   } catch {
@@ -50,31 +36,19 @@ async function enhance() {
   for (const asset of release.assets) {
     const platform = platformFor(asset.name);
     if (!platform || !asset.browser_download_url) continue;
-
     const link = document.querySelector(`a[data-platform="${platform}"]`);
-    if (link) {
-      link.href = asset.browser_download_url;
-      continue;
-    }
-    /* A format listed as "coming" has shipped: turn the placeholder into a
-       real button. */
-    const soon = document.querySelector(`[data-soon="${platform}"]`);
-    if (soon) {
-      const button = document.createElement('a');
-      button.className = 'btn';
-      button.dataset.platform = platform;
-      button.href = asset.browser_download_url;
-      button.textContent = 'Download';
-      soon.replaceWith(button);
-    }
+    if (link) link.href = asset.browser_download_url;
+    const size = document.querySelector(`[data-size="${platform}"]`);
+    if (size && asset.size) size.textContent = formatSize(asset.size);
+    const file = document.querySelector(`[data-file="${platform}"]`);
+    if (file) file.textContent = asset.name;
   }
-
   if (release.tag_name) {
     document.querySelectorAll('[data-version]').forEach((el) => {
       el.textContent = release.tag_name;
     });
   }
-  updateHero(os);
+  updateHero();
 }
 
 enhance();

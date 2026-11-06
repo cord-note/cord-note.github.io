@@ -12,7 +12,13 @@ export function platformFor(filename) {
   if (name.endsWith('.deb')) return 'deb';
   if (name.endsWith('.rpm')) return 'rpm';
   if (name.endsWith('.appimage')) return 'appimage';
+  if (name.endsWith('.pkg.tar.zst')) return 'arch';
   return null;
+}
+
+/* Bytes as a whole number of megabytes, the way the download list shows it. */
+export function formatSize(bytes) {
+  return `${Math.round(bytes / 1000000)} MB`;
 }
 
 /* The visitor's desktop OS, or null when it is not one Cord ships for.
